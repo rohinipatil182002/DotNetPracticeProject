@@ -25,7 +25,17 @@ namespace dotNetPracticeProject.Controllers
             var result = await _appDbContext.Languages.ToListAsync();
             //var result = await (from languages in _appDbContext.Languages select languages).ToListAsync();
 
+            return Ok(result);
+        }
 
+        [HttpGet("get-language-by-id/{id}")]
+        public async Task<IActionResult> GetLanguageByIdAsync([FromRoute] int id)
+        {
+            var result = await _appDbContext.Languages.FindAsync(id);
+            if (result == null)
+            {
+                return BadRequest("This Id record is not found");
+            }
             return Ok(result);
         }
     }
