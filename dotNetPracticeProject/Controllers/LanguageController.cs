@@ -65,6 +65,16 @@ namespace dotNetPracticeProject.Controllers
             return Ok(result);
         }
 
-
+        [HttpGet("get-all-language-by-Title/{title}")]
+        public async Task<IActionResult> GetAllLanguageByTitleAsync([FromRoute] string title, [FromQuery] string? description)
+        {
+            var result = await _appDbContext.Languages.Where(t => t.Title == title &&
+                (string.IsNullOrEmpty(description) || t.Description == description)).ToListAsync();
+            if (result == null)
+            {
+                return BadRequest("This Id record is not found");
+            }
+            return Ok(result);
+        }
     }
 }
