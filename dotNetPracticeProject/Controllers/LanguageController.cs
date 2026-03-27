@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace dotNetPracticeProject.Controllers
 {
@@ -39,7 +40,6 @@ namespace dotNetPracticeProject.Controllers
             return Ok(result);
         }
 
-
         [HttpGet("get-language-by-Title/{title}")]
         public async Task<IActionResult> GetLanguageByTitleAsync([FromRoute] string title)
         {
@@ -50,6 +50,21 @@ namespace dotNetPracticeProject.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("get-language-by-Title-description/{title}")]
+        public async Task<IActionResult> GetLanguageByTitleAsync([FromRoute] string title , [FromQuery] string? description)
+        {
+            var result = await _appDbContext.Languages.FirstOrDefaultAsync(
+                t => t.Title == title &&
+                (string.IsNullOrEmpty(description)  || t.Description== description)
+            );
+            if (result == null)
+            {
+                return BadRequest("This Id record is not found");
+            }
+            return Ok(result);
+        }
+
 
     }
 }
